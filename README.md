@@ -11,3 +11,7 @@ The goal of the platform is to provide a safe, reliable, and convenient transpor
 :))
 
 # Team Workers
+Nisa Kocageniş
+Zeynep Özşen
+Çağrı Kaya
+Yaren Kaya
