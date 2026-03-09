@@ -1,7 +1,5 @@
 # uniride-teamwork
 
-
-Butterflies Team Project: UniRide 
 ## Project Overview
 
 UniRide is a campus-based vehicle sharing platform designed for university students. 
@@ -25,3 +23,31 @@ Allows users to rate each other and report damages after the rental process.
 
 ### Identity & Profile Service
 Verifies user identity through university email, driver’s license checks, and criminal record verification.
+
+## System Workflow
+
+1. A renter searches for vehicles available on campus.
+2. The renter creates a reservation request.
+3. The system checks vehicle availability.
+4. The renter's identity and eligibility are verified.
+5. The vehicle owner approves or rejects the request.
+6. If the request is approved, a secure payment process is initiated.
+7. After payment confirmation, the reservation is finalized.
+8. After the rental period, both users can leave reviews.
+
+## Actors
+
+### Vehicle Owner
+Students who list their vehicles on the platform and approve or reject rental requests.
+
+### Renter
+Students who search for vehicles and create reservation requests.
+
+### University Student
+Users who register using their university email addresses.
+
+### Payment Infrastructure
+Handles secure payment transactions.
+
+### e-Government System
+Used for identity and criminal record verification.
