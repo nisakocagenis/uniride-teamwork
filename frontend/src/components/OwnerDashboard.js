@@ -315,7 +315,10 @@ function OwnerDashboard({ user }) {
   const unratedCompleted = completedReservations.filter((r) => !alreadyRated(r.id));
   const getConfirmedRes  = (vehicleId) => confirmedReservations.find((r) => r.vehicleId === vehicleId);
 
-  const totalEarnings = [...confirmedReservations, ...completedReservations].reduce((sum, r) => sum + r.amount, 0);
+  const completedEarnings = completedReservations.reduce((sum, r) => sum + r.amount, 0);
+  const activeEarnings = confirmedReservations.reduce((sum, r) => sum + r.amount, 0);
+  const totalEarnings = completedEarnings + activeEarnings;
+  const totalRentals = completedReservations.length;
   const activeRentals = vehicles.filter((v) => !v.available).length;
 
   const handleApprove = async (id) => {
@@ -371,8 +374,8 @@ function OwnerDashboard({ user }) {
       <div className="dash-stats">
         <div className="dash-stat"><span className="dash-stat-val">{vehicles.length}</span><span className="dash-stat-label">Total Vehicles</span></div>
         <div className="dash-stat"><span className="dash-stat-val">{activeRentals}</span><span className="dash-stat-label">Active Rentals</span></div>
+        <div className="dash-stat"><span className="dash-stat-val">{totalRentals}</span><span className="dash-stat-label">Completed Rentals</span></div>
         <div className="dash-stat"><span className="dash-stat-val">₺{totalEarnings.toLocaleString()}</span><span className="dash-stat-label">Total Earnings</span></div>
-        <div className="dash-stat"><span className="dash-stat-val">{pendingReservations.length}</span><span className="dash-stat-label">Pending Approval</span></div>
       </div>
 
       {/* Pending approvals */}
