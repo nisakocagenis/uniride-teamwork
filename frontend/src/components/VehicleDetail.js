@@ -47,7 +47,7 @@ function VehicleDetail({ vehicle, user, onBack, onRent, onManage }) {
           <div className="detail-img-wrap">
             {vehicle.image ? (
               <img
-                src={vehicle.image.startsWith('http') ? vehicle.image : `/images/${vehicle.image}`}
+                src={vehicle.image.startsWith('http') || vehicle.image.startsWith('data:') ? vehicle.image : `/images/${vehicle.image}`}
                 alt={`${vehicle.brand} ${vehicle.model}`}
                 className="detail-img"
                 onError={(e) => {

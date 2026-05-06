@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Landing from './components/Landing';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -14,18 +14,39 @@ import './App.css';
 import API_BASE_URLS from "./config/api";
 
 function App() {
-  const [page, setPage] = useState('landing'); // 'landing' | 'login' | 'register'
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [page, setPage] = useState('landing');
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
+  });
+  const [token, setToken] = useState(() => localStorage.getItem('token') || null);
   const [view, setView] = useState('vehicles');
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [detailVehicle, setDetailVehicle] = useState(null);
   const [reservation, setReservation] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${API_BASE_URLS.USER}/api/verify`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.valid) {
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const handleLogin = (tok, usr) => {
     setToken(tok);
     setUser(usr);
+    localStorage.setItem('token', tok);
+    localStorage.setItem('user', JSON.stringify(usr));
   };
 
   const handleLogout = async () => {
@@ -37,6 +58,8 @@ function App() {
     } catch (_) {}
     setUser(null);
     setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setView('vehicles');
     setReservation(null);
     setPage('landing');

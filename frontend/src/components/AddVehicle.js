@@ -31,6 +31,13 @@ function AddVehicle({ user, onAdded }) {
     setPreview(URL.createObjectURL(file));
   };
 
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -41,15 +48,7 @@ function AddVehicle({ user, onAdded }) {
       let imageUrl = '';
 
       if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        const uploadRes = await fetch(`${API_BASE_URLS.VEHICLE}/api/upload`, {
-          method: 'POST',
-          body: formData,
-        });
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) throw new Error('Image upload failed.');
-        imageUrl = uploadData.url;
+        imageUrl = await fileToBase64(imageFile);
       }
 
       const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`, {
