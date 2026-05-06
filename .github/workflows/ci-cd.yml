@@ -14,6 +14,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   ci:
     name: CI - Build and Check Project
@@ -35,6 +39,9 @@ jobs:
       - name: Build frontend
         working-directory: ./frontend
         run: PUBLIC_URL=/uniride-teamwork npm run build
+
+      - name: Build Docker image
+        run: docker build -t uniride-frontend .
 
       - name: Install user-service dependencies
         working-directory: ./backend/user-service
@@ -79,9 +86,6 @@ jobs:
       - name: Build frontend
         working-directory: ./frontend
         run: PUBLIC_URL=/uniride-teamwork npm run build
-
-      - name: Build Docker image
-        run: docker build -t uniride-frontend .
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
