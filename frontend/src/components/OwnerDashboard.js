@@ -24,6 +24,112 @@ function StarPicker({ label, onSubmit, loading }) {
   );
 }
 
+function RenterProfileModal({ reservation, ratings, reservations, onClose }) {
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URLS.USER}/api/users/${reservation.userId}`)
+      .then((r) => r.json())
+      .then((data) => { setUser(data); setLoadingUser(false); })
+      .catch(() => setLoadingUser(false));
+  }, [reservation.userId]);
+
+  const renterRatings = ratings.filter(
+    (r) => r.toUserId === reservation.userId && r.type === 'owner_to_renter'
+  );
+  const avgRating = renterRatings.length
+    ? (renterRatings.reduce((s, r) => s + r.stars, 0) / renterRatings.length).toFixed(1)
+    : null;
+  const completedCount = reservations.filter(
+    (r) => r.userId === reservation.userId && r.status === 'completed'
+  ).length;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{ background: '#fff', borderRadius: '16px', padding: '28px', maxWidth: '420px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)', position: 'relative' }}
+      >
+        <button
+          onClick={onClose}
+          style={{ position: 'absolute', top: '14px', right: '14px', background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#999' }}
+        >✕</button>
+
+        <h3 style={{ margin: '0 0 20px', fontSize: '17px', fontWeight: 700, color: '#1a1a2e' }}>
+          👤 Renter Profile
+        </h3>
+
+        {loadingUser ? (
+          <p style={{ color: '#888', fontSize: '14px' }}>Loading...</p>
+        ) : (
+          <>
+            {/* Temel bilgiler */}
+            <div style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px 16px', marginBottom: '18px' }}>
+              <div style={{ fontWeight: 700, fontSize: '16px', color: '#1a1a2e', marginBottom: '6px' }}>
+                {user?.name || reservation.renterName}
+              </div>
+              <div style={{ fontSize: '13px', color: '#666', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span>📧 {user?.username || '—'}</span>
+                {user?.university && <span>🎓 {user.university}</span>}
+              </div>
+            </div>
+
+            {/* İstatistikler */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '18px' }}>
+              <div style={{ textAlign: 'center', background: '#fff8f0', border: '1.5px solid #ffe0b2', borderRadius: '10px', padding: '12px 6px' }}>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#d3101f' }}>
+                  {avgRating ?? '—'}
+                </div>
+                <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>Avg Rating</div>
+              </div>
+              <div style={{ textAlign: 'center', background: '#f0fff4', border: '1.5px solid #b2dfdb', borderRadius: '10px', padding: '12px 6px' }}>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#2e7d32' }}>{renterRatings.length}</div>
+                <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>Ratings</div>
+              </div>
+              <div style={{ textAlign: 'center', background: '#f3f0ff', border: '1.5px solid #d1c4e9', borderRadius: '10px', padding: '12px 6px' }}>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#5e35b1' }}>{completedCount}</div>
+                <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>Completed</div>
+              </div>
+            </div>
+
+            {/* Geçmiş puanlar */}
+            {renterRatings.length > 0 ? (
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#444', marginBottom: '10px' }}>
+                  Previous Ratings
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto' }}>
+                  {renterRatings.slice().reverse().map((r) => (
+                    <div key={r.id} style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: '8px', padding: '10px 12px' }}>
+                      <div style={{ color: '#f59e0b', fontSize: '14px', letterSpacing: '2px', marginBottom: '4px' }}>
+                        {'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}
+                        <span style={{ color: '#999', fontSize: '11px', marginLeft: '8px', letterSpacing: 0 }}>
+                          by {r.fromName}
+                        </span>
+                      </div>
+                      {r.comment && (
+                        <div style={{ fontSize: '12px', color: '#555', fontStyle: 'italic' }}>"{r.comment}"</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '16px', background: '#fafafa', borderRadius: '10px', fontSize: '13px', color: '#aaa' }}>
+                No ratings yet — this is a new renter.
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function EditVehicleForm({ vehicle, onSave, onCancel }) {
   const fileInputRef = useRef();
   const [form, setForm] = useState({
@@ -142,6 +248,7 @@ function OwnerDashboard({ user }) {
   const [openRating, setOpenRating]       = useState(null);
   const [editingVehicle, setEditingVehicle] = useState(null);
   const [deleteConfirm, setDeleteConfirm]   = useState(null);
+  const [viewingRenter, setViewingRenter]   = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -211,6 +318,14 @@ function OwnerDashboard({ user }) {
 
   return (
     <div className="owner-dashboard">
+      {viewingRenter && (
+        <RenterProfileModal
+          reservation={viewingRenter}
+          ratings={ratings}
+          reservations={reservations}
+          onClose={() => setViewingRenter(null)}
+        />
+      )}
       <h2>My Listings</h2>
 
       {/* Stats */}
@@ -238,6 +353,10 @@ function OwnerDashboard({ user }) {
                     </div>
                   </div>
                   <div className="pending-card-actions">
+                    <button
+                      onClick={() => setViewingRenter(r)}
+                      style={{ padding: '7px 12px', background: '#f0f4ff', color: '#3b4cca', border: '1.5px solid #c7d0f8', borderRadius: '8px', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+                    >👤 View Profile</button>
                     <button className="approve-btn" onClick={() => handleApprove(r.id)} disabled={actionLoading !== null}>{actionLoading === r.id + '_approve' ? '...' : '✓ Approve'}</button>
                     <button className="reject-btn"  onClick={() => handleReject(r.id)}  disabled={actionLoading !== null}>{actionLoading === r.id + '_reject'  ? '...' : '✕ Reject'}</button>
                   </div>
