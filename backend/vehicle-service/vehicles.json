@@ -66,7 +66,55 @@
       "available": true,
       "ownerId": 2,
       "image": "http://localhost:3002/uploads/vehicle_1777436520975.jpeg"
+    },
+    {
+      "id": 7,
+      "brand": "Ford",
+      "model": "Focus",
+      "segment": "Economy",
+      "pricePerDay": 200,
+      "campus": "Yaşar Üniversitesi",
+      "available": true,
+      "archived": false,
+      "ownerId": 2,
+      "image": "test-car.jpg"
+    },
+    {
+      "id": 8,
+      "brand": "Opel",
+      "model": "Corsa",
+      "segment": "Economy",
+      "pricePerDay": 180,
+      "campus": "Ege Üniversitesi",
+      "available": false,
+      "archived": false,
+      "ownerId": 2,
+      "image": ""
+    },
+    {
+      "id": 9,
+      "brand": "Hyundai",
+      "model": "i30",
+      "segment": "Economy",
+      "pricePerDay": 220,
+      "campus": "Yaşar Üniversitesi",
+      "available": true,
+      "archived": false,
+      "ownerId": 2,
+      "image": ""
+    },
+    {
+      "id": 10,
+      "brand": "Fiat",
+      "model": "Egea",
+      "segment": "Standard",
+      "pricePerDay": 190,
+      "campus": "Yaşar Üniversitesi",
+      "available": true,
+      "archived": true,
+      "ownerId": 2,
+      "image": ""
     }
   ],
-  "nextId": 7
+  "nextId": 12
 }
