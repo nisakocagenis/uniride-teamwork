@@ -10,20 +10,47 @@ const SEGMENTS = [
 
 function VehicleList({ user: _user, onRent, onViewDetail }) {
   const [vehicles, setVehicles] = useState([]);
+  const [ownerInfo, setOwnerInfo] = useState({}); // ownerId → { name, avg, count }
   const [loading, setLoading] = useState(true);
-  const [segments, setSegments] = useState([]); // selected segment keys, empty = all
+  const [segments, setSegments] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
   useEffect(() => {
-    const fetchVehicles = async () => {
+    const fetchAll = async () => {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`);
-      const data = await res.json();
-      setVehicles(data);
+      const [vehicleRes, ratingRes] = await Promise.all([
+        fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`),
+        fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`),
+      ]);
+      const vehicleData = await vehicleRes.json();
+      const ratingData = await ratingRes.json();
+      setVehicles(vehicleData);
+
+      const ownerIds = [...new Set(vehicleData.map((v) => v.ownerId).filter(Boolean))];
+      const userResults = await Promise.all(
+        ownerIds.map((id) =>
+          fetch(`${API_BASE_URLS.USER}/api/users/${id}`)
+            .then((r) => r.json())
+            .catch(() => null)
+        )
+      );
+
+      const info = {};
+      ownerIds.forEach((id, i) => {
+        const user = userResults[i];
+        const ownerRatings = ratingData.filter(
+          (r) => r.toUserId === id && r.type === 'renter_to_owner'
+        );
+        const avg = ownerRatings.length
+          ? ownerRatings.reduce((s, r) => s + r.stars, 0) / ownerRatings.length
+          : null;
+        info[id] = { name: user?.name || '—', avg, count: ownerRatings.length };
+      });
+      setOwnerInfo(info);
       setLoading(false);
     };
-    fetchVehicles();
+    fetchAll();
   }, []);
 
   if (loading) return <div className="loading">Loading vehicles...</div>;
@@ -187,6 +214,21 @@ function VehicleList({ user: _user, onRent, onViewDetail }) {
                   <p>📍 {vehicle.campus}</p>
                   <p className="price">₺{vehicle.pricePerDay}/day</p>
                 </div>
+                {ownerInfo[vehicle.ownerId] && (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #f0f0f0' }}>
+                    <span style={{ fontSize: '12px', color: '#666' }}>
+                      👤 {ownerInfo[vehicle.ownerId].name}
+                    </span>
+                    {ownerInfo[vehicle.ownerId].avg !== null ? (
+                      <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 600 }}>
+                        ★ {ownerInfo[vehicle.ownerId].avg.toFixed(1)}
+                        <span style={{ color: '#aaa', fontWeight: 400 }}> ({ownerInfo[vehicle.ownerId].count})</span>
+                      </span>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: '#bbb' }}>No ratings yet</span>
+                    )}
+                  </div>
+                )}
                 <button
                   className="rent-btn"
                   onClick={(e) => { e.stopPropagation(); onRent(vehicle); }}
