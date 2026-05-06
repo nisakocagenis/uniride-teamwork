@@ -385,11 +385,18 @@ function OwnerDashboard({ user }) {
                   </div>
                   {r.returnPhotos?.length > 0 && (
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      {r.returnPhotos.map((url, i) => (
-                        <a key={i} href={url} target="_blank" rel="noreferrer">
-                          <img src={url} alt={`Return ${i + 1}`} style={{ width: '90px', height: '90px', objectFit: 'cover', borderRadius: '8px', border: '1.5px solid #e0e0e0', cursor: 'pointer' }} />
-                        </a>
-                      ))}
+                      {r.returnPhotos
+                        .filter((url) => !url.startsWith('http://localhost'))
+                        .map((url, i) => (
+                          <a key={i} href={url} target="_blank" rel="noreferrer">
+                            <img src={url} alt={`Return ${i + 1}`} style={{ width: '90px', height: '90px', objectFit: 'cover', borderRadius: '8px', border: '1.5px solid #e0e0e0', cursor: 'pointer' }} />
+                          </a>
+                        ))}
+                      {r.returnPhotos.some((url) => url.startsWith('http://localhost')) && (
+                        <div style={{ width: '90px', height: '90px', borderRadius: '8px', border: '1.5px dashed #ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', color: '#aaa', textAlign: 'center', padding: '4px' }}>
+                          Legacy photo unavailable
+                        </div>
+                      )}
                     </div>
                   )}
                   <button className="approve-btn" onClick={() => handleReturnApprove(r.id)} disabled={actionLoading !== null} style={{ alignSelf: 'flex-end' }}>
