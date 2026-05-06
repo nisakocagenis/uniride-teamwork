@@ -157,7 +157,7 @@ function VehicleList({ user: _user, onRent, onViewDetail }) {
               <div className="vehicle-img-wrap">
                 {vehicle.image ? (
                   <img
-                    src={vehicle.image.startsWith('http') || vehicle.image.startsWith('data:') ? vehicle.image : `/images/${vehicle.image}`}
+                    src={vehicle.image.startsWith('data:') || (vehicle.image.startsWith('http') && !vehicle.image.startsWith('http://localhost')) ? vehicle.image : `/images/${vehicle.image}`}
                     alt={`${vehicle.brand} ${vehicle.model}`}
                     className="vehicle-img"
                     onError={(e) => {

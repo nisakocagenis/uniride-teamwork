@@ -34,8 +34,8 @@ const returnUpload = multer({
   },
 });
 
-const VEHICLE_SERVICE = "http://localhost:3002";
-const PAYMENT_SERVICE = "http://localhost:3004";
+const VEHICLE_SERVICE = process.env.VEHICLE_SERVICE_URL || "http://localhost:3002";
+const PAYMENT_SERVICE = process.env.PAYMENT_SERVICE_URL || "http://localhost:3004";
 
 const DATA_FILE = path.join(__dirname, "reservations.json");
 const RATINGS_FILE = path.join(__dirname, "ratings.json");
