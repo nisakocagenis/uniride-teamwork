@@ -1,0 +1,131 @@
+{
+  "reservations": [
+    {
+      "id": 1,
+      "userId": 1,
+      "renterName": "Yaren Kaya",
+      "vehicleId": 6,
+      "vehicle": {
+        "id": 6,
+        "brand": "Opel",
+        "model": "Corsa",
+        "segment": "Economy",
+        "pricePerDay": 250,
+        "campus": "Yaşar University",
+        "available": true,
+        "ownerId": 2,
+        "image": "http://localhost:3002/uploads/vehicle_1777436520975.jpeg"
+      },
+      "startDate": "2026-04-30",
+      "endDate": "2026-05-09",
+      "amount": 2250,
+      "status": "completed",
+      "createdAt": "2026-04-29T04:58:32.402Z",
+      "transactionId": "TXN_1777438712435_3218",
+      "approvedAt": "2026-04-29T16:30:32.844Z",
+      "completedAt": "2026-04-29T16:32:01.415Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "renterName": "Yaren Kaya",
+      "vehicleId": 3,
+      "vehicle": {
+        "id": 3,
+        "brand": "BMW",
+        "model": "3 Series",
+        "segment": "Premium",
+        "pricePerDay": 400,
+        "campus": "Yaşar Üniversitesi",
+        "available": true,
+        "ownerId": 2,
+        "image": "car3.jpeg"
+      },
+      "startDate": "2026-04-30",
+      "endDate": "2026-05-03",
+      "amount": 1200,
+      "status": "confirmed",
+      "createdAt": "2026-04-29T16:32:51.716Z",
+      "transactionId": "TXN_1777480371757_2973",
+      "approvedAt": "2026-05-06T15:57:59.606Z"
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "renterName": "Yaren Kaya",
+      "vehicleId": 1,
+      "vehicle": {
+        "id": 1,
+        "brand": "Toyota",
+        "model": "Corolla",
+        "segment": "Economy",
+        "pricePerDay": 150,
+        "campus": "Yaşar Üniversitesi",
+        "available": true,
+        "ownerId": 2,
+        "image": "car1.jpeg"
+      },
+      "startDate": "2026-05-10",
+      "endDate": "2026-05-12",
+      "status": "completed",
+      "createdAt": "2026-05-02T08:36:49.039Z",
+      "transactionId": "TXN_1777711009043_4112",
+      "approvedAt": "2026-05-02T08:36:54.695Z",
+      "completedAt": "2026-05-02T08:36:54.860Z"
+    },
+    {
+      "id": 4,
+      "userId": 1,
+      "renterName": "Yaren Kaya",
+      "vehicleId": 4,
+      "vehicle": {
+        "id": 4,
+        "brand": "Renault",
+        "model": "Clio",
+        "segment": "Economy",
+        "pricePerDay": 120,
+        "campus": "Ege Üniversitesi",
+        "available": true,
+        "ownerId": 2,
+        "image": "car4.jpeg"
+      },
+      "startDate": "2026-05-15",
+      "endDate": "2026-05-17",
+      "status": "rejected",
+      "createdAt": "2026-05-02T08:37:02.242Z",
+      "transactionId": "TXN_1777711022245_9086",
+      "rejectedAt": "2026-05-02T08:37:02.462Z"
+    },
+    {
+      "id": 5,
+      "userId": 1,
+      "renterName": "Yaren Kaya",
+      "vehicleId": 1,
+      "vehicle": {
+        "id": 1,
+        "brand": "Toyota",
+        "model": "Corolla",
+        "segment": "Economy",
+        "pricePerDay": 150,
+        "campus": "Yaşar Üniversitesi",
+        "available": true,
+        "ownerId": 2,
+        "image": "car1.jpeg"
+      },
+      "startDate": "2026-05-15",
+      "endDate": "2026-05-22",
+      "amount": 1050,
+      "status": "completed",
+      "createdAt": "2026-05-06T14:40:52.314Z",
+      "transactionId": "TXN_1778078452324_8890",
+      "approvedAt": "2026-05-06T14:41:26.366Z",
+      "returnPhotos": [
+        "http://localhost:3003/return-uploads/return_1778083095559_x3g9uik4qw.png",
+        "http://localhost:3003/return-uploads/return_1778083095561_b04m2r9mdbe.png"
+      ],
+      "returnSubmittedAt": "2026-05-06T15:58:15.564Z",
+      "completedAt": "2026-05-06T15:58:29.803Z"
+    }
+  ],
+  "nextId": 6
+}

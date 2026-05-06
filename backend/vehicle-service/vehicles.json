@@ -1,0 +1,72 @@
+{
+  "vehicles": [
+    {
+      "id": 1,
+      "brand": "Toyota",
+      "model": "Corolla",
+      "segment": "Economy",
+      "pricePerDay": 150,
+      "campus": "Yaşar Üniversitesi",
+      "available": true,
+      "ownerId": 2,
+      "image": "car1.jpeg"
+    },
+    {
+      "id": 2,
+      "brand": "Honda",
+      "model": "Civic",
+      "segment": "Economy",
+      "pricePerDay": 180,
+      "campus": "Ege Üniversitesi",
+      "available": true,
+      "ownerId": 2,
+      "image": "car2.jpeg",
+      "archived": false
+    },
+    {
+      "id": 3,
+      "brand": "BMW",
+      "model": "3 Series",
+      "segment": "Premium",
+      "pricePerDay": 400,
+      "campus": "Yaşar Üniversitesi",
+      "available": false,
+      "ownerId": 2,
+      "image": "car3.jpeg"
+    },
+    {
+      "id": 4,
+      "brand": "Renault",
+      "model": "Clio",
+      "segment": "Economy",
+      "pricePerDay": 120,
+      "campus": "Ege Üniversitesi",
+      "available": true,
+      "ownerId": 2,
+      "image": "car4.jpeg"
+    },
+    {
+      "id": 5,
+      "brand": "peugeot",
+      "model": "208",
+      "segment": "Economy",
+      "pricePerDay": 1500,
+      "campus": "İTÜ",
+      "available": true,
+      "ownerId": 2,
+      "image": "http://localhost:3002/uploads/vehicle_1777164610314.jpeg"
+    },
+    {
+      "id": 6,
+      "brand": "Opel",
+      "model": "Corsa",
+      "segment": "Economy",
+      "pricePerDay": 250,
+      "campus": "Yaşar University",
+      "available": true,
+      "ownerId": 2,
+      "image": "http://localhost:3002/uploads/vehicle_1777436520975.jpeg"
+    }
+  ],
+  "nextId": 7
+}

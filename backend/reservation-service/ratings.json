@@ -1,0 +1,38 @@
+{
+  "ratings": [
+    {
+      "id": 1,
+      "reservationId": 2,
+      "fromUserId": 1,
+      "fromName": "Yaren Kaya",
+      "toUserId": 2,
+      "stars": 5,
+      "comment": "deneme",
+      "type": "renter_to_owner",
+      "createdAt": "2026-04-29T04:01:07.773Z"
+    },
+    {
+      "id": 2,
+      "reservationId": 1,
+      "fromUserId": 1,
+      "fromName": "Yaren Kaya",
+      "toUserId": 2,
+      "stars": 4,
+      "comment": "Thank you for everything.",
+      "type": "renter_to_owner",
+      "createdAt": "2026-04-29T16:31:25.978Z"
+    },
+    {
+      "id": 3,
+      "reservationId": 3,
+      "fromUserId": 1,
+      "fromName": "Yaren Kaya",
+      "toUserId": 2,
+      "stars": 5,
+      "comment": "Harika bir deneyimdi!",
+      "type": "renter_to_owner",
+      "createdAt": "2026-05-02T08:37:10.354Z"
+    }
+  ],
+  "nextId": 4
+}
