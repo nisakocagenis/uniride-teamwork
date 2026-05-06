@@ -1,0 +1,93 @@
+name: UniRide CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  ci:
+    name: CI - Build and Check Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: PUBLIC_URL=/uniride-teamwork npm run build
+
+      - name: Install user-service dependencies
+        working-directory: ./backend/user-service
+        run: npm install
+
+      - name: Install vehicle-service dependencies
+        working-directory: ./backend/vehicle-service
+        run: npm install
+
+      - name: Install reservation-service dependencies
+        working-directory: ./backend/reservation-service
+        run: npm install
+
+      - name: Install payment-service dependencies
+        working-directory: ./backend/payment-service
+        run: npm install
+
+  deploy:
+    name: CD - Deploy Frontend to GitHub Pages
+    needs: ci
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: PUBLIC_URL=/uniride-teamwork npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload frontend build files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./frontend/build
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
