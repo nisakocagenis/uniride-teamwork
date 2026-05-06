@@ -247,6 +247,7 @@ function OwnerDashboard({ user }) {
   const [vehicles, setVehicles]           = useState([]);
   const [reservations, setReservations]   = useState([]);
   const [ratings, setRatings]             = useState([]);
+  const [renterProfiles, setRenterProfiles] = useState({}); // userId → { name, university, username, avg, count }
   const [loading, setLoading]             = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const [ratingLoading, setRatingLoading] = useState(null);
@@ -262,9 +263,42 @@ function OwnerDashboard({ user }) {
       fetch(`${API_BASE_URLS.RESERVATION}/api/reservations`),
       fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`),
     ]);
-    setVehicles((await vRes.json()).filter((v) => v.ownerId === user.id));
-    setReservations(await rRes.json());
-    setRatings(await ratRes.json());
+    const vehicleData = (await vRes.json()).filter((v) => v.ownerId === user.id);
+    const reservationData = await rRes.json();
+    const ratingData = await ratRes.json();
+    setVehicles(vehicleData);
+    setReservations(reservationData);
+    setRatings(ratingData);
+
+    const myVehicleIdSet = new Set(vehicleData.map((v) => v.id));
+    const pendingUserIds = [...new Set(
+      reservationData
+        .filter((r) => r.status === 'pending_approval' && myVehicleIdSet.has(r.vehicleId))
+        .map((r) => r.userId)
+    )];
+    if (pendingUserIds.length > 0) {
+      const userResults = await Promise.all(
+        pendingUserIds.map((id) =>
+          fetch(`${API_BASE_URLS.USER}/api/users/${id}`).then((r) => r.json()).catch(() => null)
+        )
+      );
+      const profiles = {};
+      pendingUserIds.forEach((id, i) => {
+        const u = userResults[i];
+        const userRatings = ratingData.filter((r) => r.toUserId === id && r.type === 'owner_to_renter');
+        const avg = userRatings.length
+          ? (userRatings.reduce((s, r) => s + r.stars, 0) / userRatings.length).toFixed(1)
+          : null;
+        profiles[id] = {
+          name: u?.name || '—',
+          university: u?.university || null,
+          username: u?.username || null,
+          avg,
+          count: userRatings.length,
+        };
+      });
+      setRenterProfiles(profiles);
+    }
     setLoading(false);
   }, [user.id]);
 
@@ -348,20 +382,49 @@ function OwnerDashboard({ user }) {
           <div className="pending-list">
             {pendingReservations.map((r) => {
               const v = vehicles.find((v) => v.id === r.vehicleId);
+              const profile = renterProfiles[r.userId];
               return (
-                <div key={r.id} className="pending-card">
-                  <div className="pending-card-info">
-                    <div className="pending-card-vehicle">🚗 {v ? `${v.brand} ${v.model}` : `Vehicle #${r.vehicleId}`}</div>
-                    <div className="pending-card-meta">
-                      <span>👤 {r.renterName}</span><span>📅 {r.startDate} → {r.endDate}</span>
-                      <span>💰 ₺{r.amount}</span><span className="txid-small">#{r.id}</span>
+                <div key={r.id} className="pending-card" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '12px' }}>
+                  {/* Araç + tarih + tutar */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                    <div>
+                      <div className="pending-card-vehicle">🚗 {v ? `${v.brand} ${v.model}` : `Vehicle #${r.vehicleId}`}</div>
+                      <div className="pending-card-meta" style={{ marginTop: '4px' }}>
+                        <span>📅 {r.startDate} → {r.endDate}</span>
+                        <span>💰 ₺{r.amount}</span>
+                        <span className="txid-small">#{r.id}</span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Kiracı bilgileri */}
+                  <div style={{ background: '#f8f9ff', border: '1.5px solid #e0e7ff', borderRadius: '10px', padding: '12px 14px' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Renter Information</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontWeight: 700, fontSize: '15px', color: '#1a1a2e' }}>👤 {profile?.name || r.renterName}</span>
+                        {profile?.username && <span style={{ fontSize: '12px', color: '#666' }}>📧 {profile.username}</span>}
+                        {profile?.university && <span style={{ fontSize: '12px', color: '#666' }}>🎓 {profile.university}</span>}
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        {profile?.avg !== null && profile?.avg !== undefined ? (
+                          <div>
+                            <div style={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}>★ {profile.avg}</div>
+                            <div style={{ fontSize: '11px', color: '#aaa' }}>{profile.count} rating{profile.count !== 1 ? 's' : ''}</div>
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: '12px', color: '#bbb', fontStyle: 'italic' }}>No ratings yet</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Aksiyon butonları */}
                   <div className="pending-card-actions">
                     <button
                       onClick={() => setViewingRenter(r)}
                       style={{ padding: '7px 12px', background: '#f0f4ff', color: '#3b4cca', border: '1.5px solid #c7d0f8', borderRadius: '8px', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
-                    >👤 View Profile</button>
+                    >📋 Full History</button>
                     <button className="approve-btn" onClick={() => handleApprove(r.id)} disabled={actionLoading !== null}>{actionLoading === r.id + '_approve' ? '...' : '✓ Approve'}</button>
                     <button className="reject-btn"  onClick={() => handleReject(r.id)}  disabled={actionLoading !== null}>{actionLoading === r.id + '_reject'  ? '...' : '✕ Reject'}</button>
                   </div>
