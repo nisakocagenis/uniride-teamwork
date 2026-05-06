@@ -45,7 +45,6 @@ function FileUploadField({ label, hint, fieldName, file, onChange }) {
           accept=".jpg,.jpeg,.png,.pdf"
           style={{ display: 'none' }}
           onChange={(e) => onChange(e.target.files[0])}
-          required
         />
         {file ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
