@@ -308,13 +308,13 @@ function Register({ onLogin, onBack, onGoLogin }) {
             <div className="login-field">
               <label>I am a...</label>
               <div style={{ display: 'flex', gap: '10px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', flex: 1, padding: '10px 14px', border: `2px solid ${form.role === 'renter' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'renter' ? '#fff0f0' : '#fff' }}>
-                  <input type="radio" name="role" value="renter" checked={form.role === 'renter'} onChange={set('role')} style={{ accentColor: '#d3101f' }} />
-                  👤 Renter
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', flex: 1, padding: '10px 14px', border: `2px solid ${form.role === 'renter' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'renter' ? '#fff0f0' : '#fff', lineHeight: 1, boxSizing: 'border-box' }}>
+                  <input type="radio" name="role" value="renter" checked={form.role === 'renter'} onChange={set('role')} style={{ accentColor: '#d3101f', flexShrink: 0, margin: 0 }} />
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: form.role === 'renter' ? '#d3101f' : '#444', whiteSpace: 'nowrap' }}>👤 Renter</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', flex: 1, padding: '10px 14px', border: `2px solid ${form.role === 'owner' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'owner' ? '#fff0f0' : '#fff' }}>
-                  <input type="radio" name="role" value="owner" checked={form.role === 'owner'} onChange={set('role')} style={{ accentColor: '#d3101f' }} />
-                  🚗 Car Owner
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', flex: 1, padding: '10px 14px', border: `2px solid ${form.role === 'owner' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'owner' ? '#fff0f0' : '#fff', lineHeight: 1, boxSizing: 'border-box' }}>
+                  <input type="radio" name="role" value="owner" checked={form.role === 'owner'} onChange={set('role')} style={{ accentColor: '#d3101f', flexShrink: 0, margin: 0 }} />
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: form.role === 'owner' ? '#d3101f' : '#444', whiteSpace: 'nowrap' }}>🚗 Car Owner</span>
                 </label>
               </div>
             </div>
