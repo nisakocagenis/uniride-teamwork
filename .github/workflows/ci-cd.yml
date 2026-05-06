@@ -80,6 +80,9 @@ jobs:
         working-directory: ./frontend
         run: PUBLIC_URL=/uniride-teamwork npm run build
 
+      - name: Build Docker image
+        run: docker build -t uniride-frontend .
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
