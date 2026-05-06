@@ -34,7 +34,14 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
     campus: vehicle.campus,
   });
   const [imageFile, setImageFile] = useState(null);
-  const [preview, setPreview] = useState(vehicle.image?.startsWith('http') ? vehicle.image : vehicle.image ? `/images/${vehicle.image}` : null);
+  const getImageSrc = (img) => {
+    if (!img) return null;
+    if (img.startsWith('data:')) return img;
+    if (img.startsWith('http://localhost')) return null;
+    if (img.startsWith('http')) return img;
+    return `/images/${img}`;
+  };
+  const [preview, setPreview] = useState(getImageSrc(vehicle.image));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -46,12 +53,12 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
     try {
       let imageUrl = vehicle.image;
       if (imageFile) {
-        const fd = new FormData();
-        fd.append('image', imageFile);
-        const upRes = await fetch(`${API_BASE_URLS.VEHICLE}/api/upload`, { method: 'POST', body: fd });
-        const upData = await upRes.json();
-        if (!upRes.ok) throw new Error('Image upload failed.');
-        imageUrl = upData.url;
+        imageUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(imageFile);
+        });
       }
       const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles/${vehicle.id}`, {
         method: 'PUT',
@@ -313,7 +320,7 @@ function OwnerDashboard({ user }) {
               <div key={vehicle.id} className={`dash-card ${isRented ? 'rented' : 'available'}`} style={{ opacity: vehicle.archived ? 0.7 : 1 }}>
                 <div className="dash-card-img">
                   {vehicle.image ? (
-                    <img src={vehicle.image.startsWith('http') ? vehicle.image : `/images/${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`}
+                    <img src={vehicle.image.startsWith('data:') || (vehicle.image.startsWith('http') && !vehicle.image.startsWith('http://localhost')) ? vehicle.image : `/images/${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`}
                       onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                   ) : null}
                   <div className="vehicle-img-fallback" style={{ display: vehicle.image ? 'none' : 'flex' }}>🚗</div>

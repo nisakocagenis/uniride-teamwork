@@ -42,16 +42,23 @@ function ReturnForm({ reservation, onSubmitted }) {
     setPhotos((prev) => [...prev, ...valid].slice(0, 10));
   };
 
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
   const handleSubmit = async () => {
     if (photos.length === 0) return setError('Please upload at least one photo.');
     setUploading(true);
     setError('');
     try {
-      const body = new FormData();
-      photos.forEach((f) => body.append('photos', f));
+      const base64Photos = await Promise.all(photos.map(toBase64));
       const res = await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${reservation.id}/return`, {
         method: 'POST',
-        body,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photos: base64Photos }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Upload failed.');
@@ -189,7 +196,7 @@ function MyRentals({ user }) {
                     <div className="rental-vehicle-img">
                       {r.vehicle?.image ? (
                         <img
-                          src={r.vehicle.image.startsWith('http') ? r.vehicle.image : `/images/${r.vehicle.image}`}
+                          src={r.vehicle.image.startsWith('data:') || (r.vehicle.image.startsWith('http') && !r.vehicle.image.startsWith('http://localhost')) ? r.vehicle.image : `/images/${r.vehicle.image}`}
                           alt=""
                           onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                         />
