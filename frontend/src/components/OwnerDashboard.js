@@ -315,7 +315,7 @@ function OwnerDashboard({ user }) {
   const unratedCompleted = completedReservations.filter((r) => !alreadyRated(r.id));
   const getConfirmedRes  = (vehicleId) => confirmedReservations.find((r) => r.vehicleId === vehicleId);
 
-  const totalEarnings = confirmedReservations.reduce((sum, r) => sum + r.amount, 0);
+  const totalEarnings = [...confirmedReservations, ...completedReservations].reduce((sum, r) => sum + r.amount, 0);
   const activeRentals = vehicles.filter((v) => !v.available).length;
 
   const handleApprove = async (id) => {
