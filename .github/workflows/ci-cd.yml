@@ -88,7 +88,7 @@ jobs:
         run: PUBLIC_URL=/uniride-teamwork npm run build
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload frontend build files
         uses: actions/upload-pages-artifact@v3
