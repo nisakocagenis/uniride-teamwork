@@ -8,6 +8,7 @@ function AddVehicle({ user, onAdded }) {
     segment: 'Economy',
     pricePerDay: '',
     campus: '',
+    km: '',
   });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -59,7 +60,7 @@ function AddVehicle({ user, onAdded }) {
 
       if (res.ok) {
         setSuccess('Vehicle listed successfully!');
-        setForm({ brand: '', model: '', segment: 'Economy', pricePerDay: '', campus: '' });
+        setForm({ brand: '', model: '', segment: 'Economy', pricePerDay: '', campus: '', km: '' });
         setImageFile(null);
         setPreview(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -158,6 +159,19 @@ function AddVehicle({ user, onAdded }) {
                   value={form.campus}
                   onChange={(e) => setForm({ ...form, campus: e.target.value })}
                   required
+                />
+              </div>
+            </div>
+            <div className="av-field" style={{ marginTop: '10px' }}>
+              <label>Mileage (km)</label>
+              <div className="av-input-prefix">
+                <span>km</span>
+                <input
+                  type="number"
+                  placeholder="e.g. 45000"
+                  value={form.km}
+                  onChange={(e) => setForm({ ...form, km: e.target.value })}
+                  min="0"
                 />
               </div>
             </div>

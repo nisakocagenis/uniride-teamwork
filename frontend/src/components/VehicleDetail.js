@@ -178,6 +178,12 @@ function VehicleDetail({ vehicle, user, onBack, onRent, onManage }) {
                 <span className="detail-spec-label">Campus</span>
                 <span className="detail-spec-value">{vehicle.campus}</span>
               </div>
+              {vehicle.km != null && (
+                <div className="detail-spec-row">
+                  <span className="detail-spec-label">Mileage</span>
+                  <span className="detail-spec-value">{vehicle.km.toLocaleString()} km</span>
+                </div>
+              )}
               <div className="detail-spec-row">
                 <span className="detail-spec-label">Price/Day</span>
                 <span className="detail-spec-value detail-spec-price">₺{vehicle.pricePerDay}</span>

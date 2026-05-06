@@ -212,6 +212,7 @@ function VehicleList({ user: _user, onRent, onViewDetail }) {
                 <div className="vehicle-details">
                   <span className="badge">{vehicle.segment}</span>
                   <p>📍 {vehicle.campus}</p>
+                  {vehicle.km != null && <p style={{ fontSize: '13px', color: '#888', margin: '2px 0' }}>🛣 {vehicle.km.toLocaleString()} km</p>}
                   <p className="price">₺{vehicle.pricePerDay}/day</p>
                 </div>
                 {ownerInfo[vehicle.ownerId] && (

@@ -138,6 +138,7 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
     segment: vehicle.segment,
     pricePerDay: vehicle.pricePerDay,
     campus: vehicle.campus,
+    km: vehicle.km ?? '',
   });
   const [imageFile, setImageFile] = useState(null);
   const getImageSrc = (img) => {
@@ -201,6 +202,10 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
           <select value={form.segment} onChange={set('segment')} style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #e0e0e0', borderRadius: '8px', fontSize: '14px', background: '#fff', boxSizing: 'border-box' }}>
             {SEGMENTS.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
+        </div>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label style={{ fontSize: '12px', fontWeight: 600, color: '#555', display: 'block', marginBottom: '4px' }}>Mileage (km)</label>
+          <input type="number" min="0" placeholder="e.g. 45000" value={form.km} onChange={set('km')} style={{ width: '100%', padding: '8px 10px', border: '1.5px solid #e0e0e0', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
         </div>
       </div>
 

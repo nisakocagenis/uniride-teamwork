@@ -42,6 +42,7 @@ const defaultVehicles = [
     segment: "Economy",
     pricePerDay: 150,
     campus: "Yaşar Üniversitesi",
+    km: 45000,
     available: true,
     ownerId: 2,
     image: "car1.jpeg",
@@ -53,6 +54,7 @@ const defaultVehicles = [
     segment: "Economy",
     pricePerDay: 180,
     campus: "Ege Üniversitesi",
+    km: 62000,
     available: true,
     ownerId: 2,
     image: "car2.jpeg",
@@ -64,6 +66,7 @@ const defaultVehicles = [
     segment: "Premium",
     pricePerDay: 400,
     campus: "Yaşar Üniversitesi",
+    km: 28000,
     available: true,
     ownerId: 2,
     image: "car3.jpeg",
@@ -75,6 +78,7 @@ const defaultVehicles = [
     segment: "Economy",
     pricePerDay: 120,
     campus: "Ege Üniversitesi",
+    km: 85000,
     available: true,
     ownerId: 2,
     image: "car4.jpeg",
@@ -147,7 +151,7 @@ app.patch("/api/vehicles/:id/availability", (req, res) => {
 });
 
 app.post("/api/vehicles", (req, res) => {
-  const { brand, model, segment, pricePerDay, campus, ownerId, image } =
+  const { brand, model, segment, pricePerDay, campus, ownerId, image, km } =
     req.body;
   const vehicle = {
     id: nextId++,
@@ -156,6 +160,7 @@ app.post("/api/vehicles", (req, res) => {
     segment,
     pricePerDay: Number(pricePerDay),
     campus,
+    km: km ? Number(km) : null,
     available: true,
     archived: false,
     ownerId,
@@ -177,13 +182,14 @@ app.put("/api/vehicles/:id", (req, res) => {
   if (!vehicle.available)
     return res.status(400).json({ error: "Kirada olan araç düzenlenemez." });
 
-  const { brand, model, segment, pricePerDay, campus, image } = req.body;
+  const { brand, model, segment, pricePerDay, campus, image, km } = req.body;
   if (brand) vehicle.brand = brand;
   if (model) vehicle.model = model;
   if (segment) vehicle.segment = segment;
   if (pricePerDay) vehicle.pricePerDay = Number(pricePerDay);
   if (campus) vehicle.campus = campus;
   if (image !== undefined) vehicle.image = image;
+  if (km !== undefined) vehicle.km = km ? Number(km) : null;
 
   save();
   console.log(
