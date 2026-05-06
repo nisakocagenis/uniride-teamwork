@@ -43,10 +43,10 @@ function Profile({ user }) {
     ? ratings.reduce((s, r) => s + r.stars, 0) / ratings.length
     : 0;
 
-  const confirmedRentals = reservations.filter(r => r.userId === user.id && r.status === 'confirmed');
+  const completedRentals = reservations.filter(r => r.userId === user.id && (r.status === 'completed' || r.status === 'confirmed'));
   const totalEarnings = reservations
-    .filter(r => vehicles.some(v => v.id === r.vehicleId) && r.status === 'confirmed')
-    .reduce((s, r) => s + r.amount, 0);
+    .filter(r => vehicles.some(v => v.id === r.vehicleId) && (r.status === 'completed' || r.status === 'confirmed'))
+    .reduce((s, r) => s + Number(r.amount || 0), 0);
 
   const email = user.username.includes('@') ? user.username : `${user.username}@yasar.edu.tr`;
   const memberSince = new Date(2026, 3, 28 - (3 - user.id)).toLocaleDateString('tr-TR');
@@ -139,7 +139,7 @@ function Profile({ user }) {
           {user.role === 'renter' && (
             <div className="account-row">
               <span className="account-label">Completed Rentals</span>
-              <span className="account-value">{confirmedRentals.length}</span>
+              <span className="account-value">{completedRentals.length}</span>
             </div>
           )}
         </div>

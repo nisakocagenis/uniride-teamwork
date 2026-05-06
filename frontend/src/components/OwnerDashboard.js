@@ -315,8 +315,8 @@ function OwnerDashboard({ user }) {
   const unratedCompleted = completedReservations.filter((r) => !alreadyRated(r.id));
   const getConfirmedRes  = (vehicleId) => confirmedReservations.find((r) => r.vehicleId === vehicleId);
 
-  const completedEarnings = completedReservations.reduce((sum, r) => sum + r.amount, 0);
-  const activeEarnings = confirmedReservations.reduce((sum, r) => sum + r.amount, 0);
+  const completedEarnings = completedReservations.reduce((sum, r) => sum + Number(r.amount || 0), 0);
+  const activeEarnings = confirmedReservations.reduce((sum, r) => sum + Number(r.amount || 0), 0);
   const totalEarnings = completedEarnings + activeEarnings;
   const totalRentals = completedReservations.length;
   const activeRentals = vehicles.filter((v) => !v.available).length;
