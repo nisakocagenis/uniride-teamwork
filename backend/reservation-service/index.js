@@ -3,10 +3,32 @@ const cors = require("cors");
 const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+
+const RETURN_UPLOADS_DIR = path.join(__dirname, "return-uploads");
+if (!fs.existsSync(RETURN_UPLOADS_DIR)) fs.mkdirSync(RETURN_UPLOADS_DIR);
+app.use("/return-uploads", express.static(RETURN_UPLOADS_DIR));
+
+const returnStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, RETURN_UPLOADS_DIR),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `return_${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`);
+  },
+});
+const returnUpload = multer({
+  storage: returnStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = [".jpg", ".jpeg", ".png", ".webp"];
+    if (allowed.includes(path.extname(file.originalname).toLowerCase())) cb(null, true);
+    else cb(new Error("Only image files are allowed."));
+  },
+});
 
 const VEHICLE_SERVICE = process.env.VEHICLE_SERVICE_URL || "https://uniride-vehicle-service.onrender.com";
 const PAYMENT_SERVICE = process.env.PAYMENT_SERVICE_URL || "https://uniride-payment-service.onrender.com";
@@ -188,8 +210,8 @@ app.patch("/api/reservations/:id/reject", (req, res) => {
   res.json(reservation);
 });
 
-// ── Araç iade et (kiracı) — base64 fotoğraflar ───────────────────────────
-app.post("/api/reservations/:id/return", (req, res) => {
+// ── Araç iade et (kiracı) — fotoğraf yükle ───────────────────────────────
+app.post("/api/reservations/:id/return", returnUpload.array("photos", 10), (req, res) => {
   const reservation = reservations.find(
     (r) => r.id === Number(req.params.id),
   );
@@ -199,20 +221,22 @@ app.post("/api/reservations/:id/return", (req, res) => {
     return res
       .status(400)
       .json({ error: "Sadece aktif kiralamalar iade edilebilir." });
-
-  const { photos } = req.body;
-  if (!photos || photos.length === 0)
+  if (!req.files || req.files.length === 0)
     return res
       .status(400)
       .json({ error: "En az bir fotoğraf yüklemelisiniz." });
 
+  const BASE_URL = "https://uniride-reservation-service.onrender.com";
+  const photoUrls = req.files.map(
+    (f) => `${BASE_URL}/return-uploads/${f.filename}`,
+  );
   reservation.status = "pending_return";
-  reservation.returnPhotos = photos;
+  reservation.returnPhotos = photoUrls;
   reservation.returnSubmittedAt = new Date().toISOString();
   save();
 
   console.log(
-    `[ReservationService] 📸 İade fotoğrafları yüklendi → #${reservation.id} | ${photos.length} fotoğraf`,
+    `[ReservationService] 📸 İade fotoğrafları yüklendi → #${reservation.id} | ${req.files.length} fotoğraf`,
   );
   logStats();
   res.json(reservation);

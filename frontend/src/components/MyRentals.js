@@ -42,23 +42,16 @@ function ReturnForm({ reservation, onSubmitted }) {
     setPhotos((prev) => [...prev, ...valid].slice(0, 10));
   };
 
-  const toBase64 = (file) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-
   const handleSubmit = async () => {
     if (photos.length === 0) return setError('Please upload at least one photo.');
     setUploading(true);
     setError('');
     try {
-      const base64Photos = await Promise.all(photos.map(toBase64));
+      const body = new FormData();
+      photos.forEach((f) => body.append('photos', f));
       const res = await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${reservation.id}/return`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ photos: base64Photos }),
+        body,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Upload failed.');
