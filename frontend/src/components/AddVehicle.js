@@ -74,7 +74,7 @@ function AddVehicle({ user, onAdded }) {
 
   const SEGMENTS = [
     { value: 'Economy',  icon: '🚗', desc: 'Budget-friendly' },
-    { value: 'Standard', icon: '🚙', desc: 'Mid-range' },
+    { value: 'Standart', icon: '🚙', desc: 'Mid-range' },
     { value: 'Premium',  icon: '🏎️', desc: 'Luxury' },
     { value: 'SUV',      icon: '🚐', desc: 'Sport utility' },
   ];

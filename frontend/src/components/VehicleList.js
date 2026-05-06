@@ -3,7 +3,7 @@ import API_BASE_URLS from "../config/api";
 
 const SEGMENTS = [
   { key: 'Eco',      label: '🌿 Eco',      match: 'Economy'  },
-  { key: 'Standard', label: '🚗 Standard', match: 'Standard' },
+  { key: 'Standart', label: '🚗 Standart', match: 'Standart' },
   { key: 'SUV',      label: '🛻 SUV',      match: 'SUV'      },
   { key: 'Premium',  label: '⭐ Premium',  match: 'Premium'  },
 ];

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import API_BASE_URLS from "../config/api";
 
-const SEGMENTS = ['Economy', 'Standard', 'Premium', 'SUV'];
+const SEGMENTS = ['Economy', 'Standart', 'Premium', 'SUV'];
 
 function StarPicker({ label, onSubmit, loading }) {
   const [stars, setStars] = useState(0);
