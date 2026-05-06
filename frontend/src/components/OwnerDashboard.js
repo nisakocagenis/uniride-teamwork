@@ -48,7 +48,7 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
       if (imageFile) {
         const fd = new FormData();
         fd.append('image', imageFile);
-        const upRes = await fetch('${API_BASE_URLS.VEHICLE}/api/upload', { method: 'POST', body: fd });
+        const upRes = await fetch(`${API_BASE_URLS.VEHICLE}/api/upload`, { method: 'POST', body: fd });
         const upData = await upRes.json();
         if (!upRes.ok) throw new Error('Image upload failed.');
         imageUrl = upData.url;
@@ -139,9 +139,9 @@ function OwnerDashboard({ user }) {
   const load = useCallback(async () => {
     setLoading(true);
     const [vRes, rRes, ratRes] = await Promise.all([
-      fetch('${API_BASE_URLS.VEHICLE}/api/vehicles'),
-      fetch('${API_BASE_URLS.RESERVATION}/api/reservations'),
-      fetch('${API_BASE_URLS.RESERVATION}/api/ratings'),
+      fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`),
+      fetch(`${API_BASE_URLS.RESERVATION}/api/reservations`),
+      fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`),
     ]);
     setVehicles((await vRes.json()).filter((v) => v.ownerId === user.id));
     setReservations(await rRes.json());
@@ -182,7 +182,7 @@ function OwnerDashboard({ user }) {
   };
   const handleRate = async (reservation, stars, comment) => {
     setRatingLoading(reservation.id);
-    await fetch('${API_BASE_URLS.RESERVATION}/api/ratings', {
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reservationId: reservation.id, fromUserId: user.id, fromName: user.name, toUserId: reservation.userId, stars, comment, type: 'owner_to_renter' }),

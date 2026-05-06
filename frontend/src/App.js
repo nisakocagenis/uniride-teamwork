@@ -30,7 +30,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await fetch('${API_BASE_URLS.USER}/api/logout', {
+      await fetch(`${API_BASE_URLS.USER}/api/logout`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });

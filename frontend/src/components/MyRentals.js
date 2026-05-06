@@ -125,8 +125,8 @@ function MyRentals({ user }) {
   const load = useCallback(async () => {
     setLoading(true);
     const [rRes, ratRes] = await Promise.all([
-      fetch('${API_BASE_URLS.RESERVATION}/api/reservations'),
-      fetch('${API_BASE_URLS.RESERVATION}/api/ratings'),
+      fetch(`${API_BASE_URLS.RESERVATION}/api/reservations`),
+      fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`),
     ]);
     const rData   = await rRes.json();
     const ratData = await ratRes.json();
@@ -146,7 +146,7 @@ function MyRentals({ user }) {
 
   const handleRate = async (reservation, stars, comment) => {
     setRatingLoading(reservation.id);
-    await fetch('${API_BASE_URLS.RESERVATION}/api/ratings', {
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/ratings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

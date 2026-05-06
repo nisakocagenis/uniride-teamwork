@@ -18,7 +18,7 @@ function VehicleList({ user: _user, onRent, onViewDetail }) {
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true);
-      const res = await fetch('${API_BASE_URLS.VEHICLE}/api/vehicles');
+      const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`);
       const data = await res.json();
       setVehicles(data);
       setLoading(false);

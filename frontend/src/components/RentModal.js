@@ -59,7 +59,7 @@ function RentModal({ vehicle, user, token, onClose, onSuccess }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('${API_BASE_URLS.RESERVATION}/api/reservations', {
+      const res = await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

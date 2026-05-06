@@ -25,10 +25,10 @@ function Profile({ user }) {
     const load = async () => {
       const promises = [
         fetch(`${API_BASE_URLS.RESERVATION}/api/ratings/user/${user.id}`).then(r => r.json()),
-        fetch('${API_BASE_URLS.RESERVATION}/api/reservations').then(r => r.json()),
+        fetch(`${API_BASE_URLS.RESERVATION}/api/reservations`).then(r => r.json()),
       ];
       if (user.role === 'owner') {
-        promises.push(fetch('${API_BASE_URLS.VEHICLE}/api/vehicles').then(r => r.json()));
+        promises.push(fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`).then(r => r.json()));
       }
       const results = await Promise.all(promises);
       setRatings(results[0]);

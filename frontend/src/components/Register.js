@@ -136,7 +136,7 @@ function Register({ onLogin, onBack, onGoLogin }) {
       body.append('license', licenseFile);
       body.append('criminalRecord', criminalFile);
 
-      const res = await fetch('${API_BASE_URLS.USER}/api/register', {
+      const res = await fetch(`${API_BASE_URLS.USER}/api/register`, {
         method: 'POST',
         body,
       });

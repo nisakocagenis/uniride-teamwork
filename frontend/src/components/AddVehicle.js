@@ -43,7 +43,7 @@ function AddVehicle({ user, onAdded }) {
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-        const uploadRes = await fetch('${API_BASE_URLS.VEHICLE}/api/upload', {
+        const uploadRes = await fetch(`${API_BASE_URLS.VEHICLE}/api/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -52,7 +52,7 @@ function AddVehicle({ user, onAdded }) {
         imageUrl = uploadData.url;
       }
 
-      const res = await fetch('${API_BASE_URLS.VEHICLE}/api/vehicles', {
+      const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, ownerId: user.id, image: imageUrl }),
