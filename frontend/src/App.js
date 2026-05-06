@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import RentModal from './components/RentModal';
 import Confirmation from './components/Confirmation';
 import './App.css';
+import API_BASE_URLS from "./config/api";
 
 function App() {
   const [page, setPage] = useState('landing'); // 'landing' | 'login' | 'register'
@@ -29,7 +30,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:3001/api/logout', {
+      await fetch('${API_BASE_URLS.USER}/api/logout', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });

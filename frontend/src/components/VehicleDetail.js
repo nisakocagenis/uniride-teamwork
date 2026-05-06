@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_BASE_URLS from "../config/api";
 
 function StarDisplay({ rating, count }) {
   return (
@@ -18,8 +19,8 @@ function VehicleDetail({ vehicle, user, onBack, onRent, onManage }) {
 
   useEffect(() => {
     Promise.all([
-      fetch(`http://localhost:3001/api/users/${vehicle.ownerId}`).then(r => r.json()).catch(() => null),
-      fetch(`http://localhost:3003/api/ratings/user/${vehicle.ownerId}`).then(r => r.json()).catch(() => []),
+      fetch(`${API_BASE_URLS.USER}/api/users/${vehicle.ownerId}`).then(r => r.json()).catch(() => null),
+      fetch(`${API_BASE_URLS.RESERVATION}/api/ratings/user/${vehicle.ownerId}`).then(r => r.json()).catch(() => []),
     ]).then(([owner, ratingData]) => {
       setOwnerInfo(owner);
       setRatings(Array.isArray(ratingData) ? ratingData : []);

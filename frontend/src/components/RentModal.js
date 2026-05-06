@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import API_BASE_URLS from "../config/api";
 
 function RentModal({ vehicle, user, token, onClose, onSuccess }) {
   const [step, setStep] = useState(1);
@@ -58,7 +59,7 @@ function RentModal({ vehicle, user, token, onClose, onSuccess }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:3003/api/reservations', {
+      const res = await fetch('${API_BASE_URLS.RESERVATION}/api/reservations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

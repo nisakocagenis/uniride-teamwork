@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import API_BASE_URLS from "../config/api";
 
 const STATUS_MAP = {
   pending_approval: { label: '⏳ Pending Approval',      cls: 'status-pending'   },
@@ -48,7 +49,7 @@ function ReturnForm({ reservation, onSubmitted }) {
     try {
       const body = new FormData();
       photos.forEach((f) => body.append('photos', f));
-      const res = await fetch(`http://localhost:3003/api/reservations/${reservation.id}/return`, {
+      const res = await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${reservation.id}/return`, {
         method: 'POST',
         body,
       });
@@ -124,8 +125,8 @@ function MyRentals({ user }) {
   const load = useCallback(async () => {
     setLoading(true);
     const [rRes, ratRes] = await Promise.all([
-      fetch('http://localhost:3003/api/reservations'),
-      fetch('http://localhost:3003/api/ratings'),
+      fetch('${API_BASE_URLS.RESERVATION}/api/reservations'),
+      fetch('${API_BASE_URLS.RESERVATION}/api/ratings'),
     ]);
     const rData   = await rRes.json();
     const ratData = await ratRes.json();
@@ -138,14 +139,14 @@ function MyRentals({ user }) {
 
   const handleCancel = async (id) => {
     setCancelLoading(id);
-    await fetch(`http://localhost:3003/api/reservations/${id}/cancel`, { method: 'PATCH' });
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${id}/cancel`, { method: 'PATCH' });
     await load();
     setCancelLoading(null);
   };
 
   const handleRate = async (reservation, stars, comment) => {
     setRatingLoading(reservation.id);
-    await fetch('http://localhost:3003/api/ratings', {
+    await fetch('${API_BASE_URLS.RESERVATION}/api/ratings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

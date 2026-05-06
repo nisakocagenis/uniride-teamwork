@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_BASE_URLS from "../config/api";
 
 function StarDisplay({ avg, count }) {
   const full = Math.floor(avg);
@@ -23,11 +24,11 @@ function Profile({ user }) {
   useEffect(() => {
     const load = async () => {
       const promises = [
-        fetch(`http://localhost:3003/api/ratings/user/${user.id}`).then(r => r.json()),
-        fetch('http://localhost:3003/api/reservations').then(r => r.json()),
+        fetch(`${API_BASE_URLS.RESERVATION}/api/ratings/user/${user.id}`).then(r => r.json()),
+        fetch('${API_BASE_URLS.RESERVATION}/api/reservations').then(r => r.json()),
       ];
       if (user.role === 'owner') {
-        promises.push(fetch('http://localhost:3002/api/vehicles').then(r => r.json()));
+        promises.push(fetch('${API_BASE_URLS.VEHICLE}/api/vehicles').then(r => r.json()));
       }
       const results = await Promise.all(promises);
       setRatings(results[0]);

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import API_BASE_URLS from "../config/api";
 
 const SEGMENTS = ['Economy', 'Standard', 'Premium', 'SUV'];
 
@@ -47,12 +48,12 @@ function EditVehicleForm({ vehicle, onSave, onCancel }) {
       if (imageFile) {
         const fd = new FormData();
         fd.append('image', imageFile);
-        const upRes = await fetch('http://localhost:3002/api/upload', { method: 'POST', body: fd });
+        const upRes = await fetch('${API_BASE_URLS.VEHICLE}/api/upload', { method: 'POST', body: fd });
         const upData = await upRes.json();
         if (!upRes.ok) throw new Error('Image upload failed.');
         imageUrl = upData.url;
       }
-      const res = await fetch(`http://localhost:3002/api/vehicles/${vehicle.id}`, {
+      const res = await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles/${vehicle.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, pricePerDay: Number(form.pricePerDay), image: imageUrl }),
@@ -138,9 +139,9 @@ function OwnerDashboard({ user }) {
   const load = useCallback(async () => {
     setLoading(true);
     const [vRes, rRes, ratRes] = await Promise.all([
-      fetch('http://localhost:3002/api/vehicles'),
-      fetch('http://localhost:3003/api/reservations'),
-      fetch('http://localhost:3003/api/ratings'),
+      fetch('${API_BASE_URLS.VEHICLE}/api/vehicles'),
+      fetch('${API_BASE_URLS.RESERVATION}/api/reservations'),
+      fetch('${API_BASE_URLS.RESERVATION}/api/ratings'),
     ]);
     setVehicles((await vRes.json()).filter((v) => v.ownerId === user.id));
     setReservations(await rRes.json());
@@ -166,22 +167,22 @@ function OwnerDashboard({ user }) {
 
   const handleApprove = async (id) => {
     setActionLoading(id + '_approve');
-    await fetch(`http://localhost:3003/api/reservations/${id}/approve`, { method: 'PATCH' });
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${id}/approve`, { method: 'PATCH' });
     await load(); setActionLoading(null);
   };
   const handleReject = async (id) => {
     setActionLoading(id + '_reject');
-    await fetch(`http://localhost:3003/api/reservations/${id}/reject`, { method: 'PATCH' });
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${id}/reject`, { method: 'PATCH' });
     await load(); setActionLoading(null);
   };
   const handleReturnApprove = async (id) => {
     setActionLoading(id + '_return');
-    await fetch(`http://localhost:3003/api/reservations/${id}/return-approve`, { method: 'PATCH' });
+    await fetch(`${API_BASE_URLS.RESERVATION}/api/reservations/${id}/return-approve`, { method: 'PATCH' });
     await load(); setActionLoading(null);
   };
   const handleRate = async (reservation, stars, comment) => {
     setRatingLoading(reservation.id);
-    await fetch('http://localhost:3003/api/ratings', {
+    await fetch('${API_BASE_URLS.RESERVATION}/api/ratings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reservationId: reservation.id, fromUserId: user.id, fromName: user.name, toUserId: reservation.userId, stars, comment, type: 'owner_to_renter' }),
@@ -190,12 +191,12 @@ function OwnerDashboard({ user }) {
   };
   const handleArchive = async (id) => {
     setActionLoading(id + '_archive');
-    await fetch(`http://localhost:3002/api/vehicles/${id}/archive`, { method: 'PATCH' });
+    await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles/${id}/archive`, { method: 'PATCH' });
     await load(); setActionLoading(null);
   };
   const handleDelete = async (id) => {
     setActionLoading(id + '_delete');
-    await fetch(`http://localhost:3002/api/vehicles/${id}`, { method: 'DELETE' });
+    await fetch(`${API_BASE_URLS.VEHICLE}/api/vehicles/${id}`, { method: 'DELETE' });
     setDeleteConfirm(null); await load(); setActionLoading(null);
   };
 

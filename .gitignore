@@ -1,0 +1,12 @@
+
+# Local generated files
+node_modules/
+frontend/node_modules/
+frontend/build/
+frontend/node_modules/.cache/
+backend/*/node_modules/
+backend/*/coverage/
+coverage/
+.DS_Store
+.env
+.env.*
