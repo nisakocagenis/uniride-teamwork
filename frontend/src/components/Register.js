@@ -308,16 +308,22 @@ function Register({ onLogin, onBack, onGoLogin }) {
             <div className="login-field">
               <label>I am a...</label>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', width: '100%', padding: '11px 16px', border: `2px solid ${form.role === 'renter' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'renter' ? '#fff0f0' : '#fff', boxSizing: 'border-box' }}>
+                <div
+                  onClick={() => setForm(f => ({ ...f, role: 'renter' }))}
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '11px 16px', border: `2px solid ${form.role === 'renter' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'renter' ? '#fff0f0' : '#fff', boxSizing: 'border-box' }}
+                >
                   <input type="radio" name="role" value="renter" checked={form.role === 'renter'} onChange={set('role')} style={{ accentColor: '#d3101f', flexShrink: 0, margin: 0, width: '16px', height: '16px' }} />
                   <span style={{ fontSize: '14px', fontWeight: 600, color: form.role === 'renter' ? '#d3101f' : '#444' }}>👤 Renter</span>
                   <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#888' }}>I want to rent vehicles</span>
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', width: '100%', padding: '11px 16px', border: `2px solid ${form.role === 'owner' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'owner' ? '#fff0f0' : '#fff', boxSizing: 'border-box' }}>
+                </div>
+                <div
+                  onClick={() => setForm(f => ({ ...f, role: 'owner' }))}
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '11px 16px', border: `2px solid ${form.role === 'owner' ? '#d3101f' : '#e0e0e0'}`, borderRadius: '8px', background: form.role === 'owner' ? '#fff0f0' : '#fff', boxSizing: 'border-box' }}
+                >
                   <input type="radio" name="role" value="owner" checked={form.role === 'owner'} onChange={set('role')} style={{ accentColor: '#d3101f', flexShrink: 0, margin: 0, width: '16px', height: '16px' }} />
                   <span style={{ fontSize: '14px', fontWeight: 600, color: form.role === 'owner' ? '#d3101f' : '#444' }}>🚗 Car Owner</span>
                   <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#888' }}>I want to list my car</span>
-                </label>
+                </div>
               </div>
             </div>
 
