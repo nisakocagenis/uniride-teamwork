@@ -1,6 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import API_BASE_URLS from "../config/api";
 
+function getImgSrc(image) {
+  if (!image) return null;
+  const s = image.trim();
+  if (!s) return null;
+  if (s.startsWith('data:')) return s;
+  if (s.includes('localhost') || s.includes('127.0.0.1')) return null;
+  if (s.startsWith('http')) return s;
+  return `/images/${s}`;
+}
+
 const STATUS_MAP = {
   pending_approval: { label: '⏳ Pending Approval',      cls: 'status-pending'   },
   confirmed:        { label: '✅ Active Rental',          cls: 'status-confirmed' },
