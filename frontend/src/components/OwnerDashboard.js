@@ -1,6 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import API_BASE_URLS from "../config/api";
 
+function getImgSrc(image) {
+  if (!image) return null;
+  const s = image.trim();
+  if (!s) return null;
+  if (s.startsWith('data:')) return s;
+  if (s.includes('localhost') || s.includes('127.0.0.1')) return null;
+  if (s.startsWith('http')) return s;
+  return `/images/${s}`;
+}
+
 const SEGMENTS = ['Economy', 'Standart', 'Premium', 'SUV'];
 
 function StarPicker({ label, onSubmit, loading }) {
@@ -516,11 +526,11 @@ function OwnerDashboard({ user }) {
             return (
               <div key={vehicle.id} className={`dash-card ${isRented ? 'rented' : 'available'}`} style={{ opacity: vehicle.archived ? 0.7 : 1 }}>
                 <div className="dash-card-img">
-                  {vehicle.image ? (
-                    <img src={vehicle.image.startsWith('data:') || (vehicle.image.startsWith('http') && !vehicle.image.startsWith('http://localhost')) ? vehicle.image : `/images/${vehicle.image}`} alt={`${vehicle.brand} ${vehicle.model}`}
+                  {getImgSrc(vehicle.image) ? (
+                    <img src={getImgSrc(vehicle.image)} alt={`${vehicle.brand} ${vehicle.model}`}
                       onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                   ) : null}
-                  <div className="vehicle-img-fallback" style={{ display: vehicle.image ? 'none' : 'flex' }}>🚗</div>
+                  <div className="vehicle-img-fallback" style={{ display: getImgSrc(vehicle.image) ? 'none' : 'flex' }}>🚗</div>
                   <div className={`status-pill ${isRented ? 'pill-rented' : vehicle.archived ? 'pill-archived' : 'pill-available'}`}>
                     {isRented ? '🔴 Rented' : vehicle.archived ? '📦 Archived' : '🟢 Available'}
                   </div>

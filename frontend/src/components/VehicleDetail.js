@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import API_BASE_URLS from "../config/api";
 
+function getImgSrc(image) {
+  if (!image) return null;
+  const s = image.trim();
+  if (!s) return null;
+  if (s.startsWith('data:')) return s;
+  if (s.includes('localhost') || s.includes('127.0.0.1')) return null;
+  if (s.startsWith('http')) return s;
+  return `/images/${s}`;
+}
+
 function StarDisplay({ rating, count }) {
   return (
     <div className="star-display">
@@ -45,9 +55,9 @@ function VehicleDetail({ vehicle, user, onBack, onRent, onManage }) {
         <div className="detail-left">
           {/* Araç görseli */}
           <div className="detail-img-wrap">
-            {vehicle.image ? (
+            {getImgSrc(vehicle.image) ? (
               <img
-                src={vehicle.image.startsWith('data:') || (vehicle.image.startsWith('http') && !vehicle.image.startsWith('http://localhost')) ? vehicle.image : `/images/${vehicle.image}`}
+                src={getImgSrc(vehicle.image)}
                 alt={`${vehicle.brand} ${vehicle.model}`}
                 className="detail-img"
                 onError={(e) => {
@@ -58,7 +68,7 @@ function VehicleDetail({ vehicle, user, onBack, onRent, onManage }) {
             ) : null}
             <div
               className="detail-img-fallback"
-              style={{ display: vehicle.image ? 'none' : 'flex' }}
+              style={{ display: getImgSrc(vehicle.image) ? 'none' : 'flex' }}
             >
               🚗
             </div>
