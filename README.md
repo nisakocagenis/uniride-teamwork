@@ -1,5 +1,5 @@
-Projeyi çalıştırmak için aşağıdaki adımları takip edin:
-ilk olarak `install.bat` dosyasını çalıştırarak tüm bağımlılıkları yükleyin. Ardından `start.bat` dosyasını çalıştırarak tüm servisleri başlatın. Tarayıcınızda `http://localhost:3000` adresine giderek uygulamayı kullanmaya başlayabilirsiniz. Sorun yaşamanız halinde bana yazabilirsiniz.
+https://uniride-snowy.vercel.app/
+uygulamamızı canlı şekilde test edebilirsiniz 
 
 # UniRide 🚗
 
